@@ -109,23 +109,19 @@
 
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
 
-    NSPredicate * predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
-
-    [self fetchQuantitySamplesOfType:stepCountType
-             unit:unit
-            predicate:predicate
-            ascending:ascending
-            limit:limit
-            completion:^(NSArray *results, NSError *error) {
-                 if(results){
-                     callback(@[[NSNull null], results]);
-                     return;
-                 } else {
-                     callback(@[RCTJSErrorFromNSError(error)]);
-                     return;
-                 }
-             }
-    ];
+    [self fetchHourlyCumulativeSumStatisticsCollection:stepCountType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+        if (err != nil) {
+            callback(@[RCTJSErrorFromNSError(err)]);
+            return;
+        }
+        callback(@[[NSNull null], arr]);
+    }];
 }
 
 
