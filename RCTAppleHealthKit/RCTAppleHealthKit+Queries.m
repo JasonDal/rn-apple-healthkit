@@ -585,7 +585,7 @@
     
     NSDateComponents *anchorComponents = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
                                                      fromDate:[NSDate date]];
-    anchorComponents.day = 0;
+    anchorComponents.day = 1;
     NSDate *anchorDate = [calendar dateFromComponents:anchorComponents];
     
     // Create the query
@@ -640,7 +640,7 @@
     
     NSDateComponents *anchorComponents = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
                                                      fromDate:[NSDate date]];
-    anchorComponents.day = 0;
+    anchorComponents.day = 1;
     NSDate *anchorDate = [calendar dateFromComponents:anchorComponents];
     
     // Create the query
