@@ -33,6 +33,19 @@
                                     completion:(void (^)(NSArray *, NSError *))completionHandler;
 
 
+- (void)fetchMonthlyCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                                unit:(HKUnit *)unit
+                                           startDate:(NSDate *)startDate
+                                             endDate:(NSDate *)endDate
+                                          completion:(void (^)(NSArray *, NSError *))completionHandler;
+- (void)fetchMonthlyCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                                unit:(HKUnit *)unit
+                                           startDate:(NSDate *)startDate
+                                             endDate:(NSDate *)endDate
+                                           ascending:(BOOL)asc
+                                               limit:(NSUInteger)lim
+                                          completion:(void (^)(NSArray *, NSError *))completionHandler;
+
 
 - (void)fetchSamplesOfType:(HKSampleType *)quantityType
                               unit:(HKUnit *)unit
