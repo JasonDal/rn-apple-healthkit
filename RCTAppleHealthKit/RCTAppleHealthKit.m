@@ -149,6 +149,11 @@ RCT_EXPORT_METHOD(getDailyStepCountSamples:(NSDictionary *)input callback:(RCTRe
     [self fitness_getDailyStepSamples:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getMonthlyStepCountSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_getMonthlyStepSamples:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(saveSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self fitness_saveSteps:input callback:callback];
