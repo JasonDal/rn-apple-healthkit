@@ -125,6 +125,43 @@
 }
 
 
+- (void)fitness_getAllStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    
+    NSDate *refYear = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:0];
+    
+    NSDateComponents *addYear = [[NSDateComponents alloc] init];
+    addYear.year = 1;
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDate *nextYear = [cal dateByAddingComponents:addYear toDate:[NSDate date] options:0];
+    
+    
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+    
+    [self fetchHourlyCumulativeSumStatisticsCollection:stepCountType
+                                                  unit:unit
+                                             startDate:refYear
+                                               endDate:nextYear
+                                             ascending:ascending
+                                                 limit:limit
+                                            completion:^(NSArray *arr, NSError *err){
+                                                if (err != nil) {
+                                                    callback(@[RCTJSErrorFromNSError(err)]);
+                                                    return;
+                                                }
+                                                callback(@[[NSNull null], arr]);
+                                            }];
+}
+
+
 - (void)fitness_getDailyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
