@@ -138,12 +138,6 @@
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *nextYear = [cal dateByAddingComponents:addYear toDate:[NSDate date] options:0];
     
-    
-    if(startDate == nil){
-        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
-        return;
-    }
-    
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
     
     [self fetchHourlyCumulativeSumStatisticsCollection:stepCountType
