@@ -127,35 +127,40 @@
 
 - (void)fitness_getAllStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
+    
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
     NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
     BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
     
-
     NSDateComponents *comps = [[NSDateComponents alloc] init];
-    [comps setDay: 1];
-    [comps setMonth: 1];
-    [comps setYear: 2013];
-    NSDate *start = [[NSCalendar currentCalendar] dateFromComponents:comps];
-    NSDate *now = [NSDate date];
+    comps.year = 2013;
+    comps.month = 1;
+    comps.day = 1;
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *startDate = [cal dateFromComponents:comps];
+    NSDate *endDate = [NSDate date];
+    
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
     
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
     
-    
-    
-    [self fetchHourlyCumulativeSumStatisticsCollection:stepCountType
-                                                  unit:unit
-                                             startDate:start
-                                               endDate:now
-                                             ascending:ascending
-                                                 limit:limit
-                                            completion:^(NSArray *arr, NSError *err){
-                                                if (err != nil) {
-                                                    callback(@[RCTJSErrorFromNSError(err)]);
-                                                    return;
-                                                }
-                                                callback(@[[NSNull null], arr]);
-                                            }];
+    [self fetchCumulativeSumStatisticsCollection:stepCountType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+                                          if (err != nil) {
+                                              callback(@[RCTJSErrorFromNSError(err)]);
+                                              return;
+                                          }
+                                          callback(@[[NSNull null], arr]);
+                                      }];
 }
 
 
