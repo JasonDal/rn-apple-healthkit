@@ -131,19 +131,22 @@
     NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
     BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
     
-    NSDate *refYear = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:0];
-    
-    NSDateComponents *addYear = [[NSDateComponents alloc] init];
-    addYear.year = 1;
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDate *nextYear = [cal dateByAddingComponents:addYear toDate:[NSDate date] options:0];
+
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    [comps setDay: 1];
+    [comps setMonth: 1];
+    [comps setYear: 2013];
+    NSDate *start = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    NSDate *now = [NSDate date];
     
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
     
+    
+    
     [self fetchHourlyCumulativeSumStatisticsCollection:stepCountType
                                                   unit:unit
-                                             startDate:refYear
-                                               endDate:nextYear
+                                             startDate:start
+                                               endDate:now
                                              ascending:ascending
                                                  limit:limit
                                             completion:^(NSArray *arr, NSError *err){
