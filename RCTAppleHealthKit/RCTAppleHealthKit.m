@@ -64,6 +64,11 @@ RCT_EXPORT_METHOD(getWeightSamples:(NSDictionary *)input callback:(RCTResponseSe
     [self body_getWeightSamples:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getAverageWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getAverageWeight:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_saveWeight:input callback:callback];
