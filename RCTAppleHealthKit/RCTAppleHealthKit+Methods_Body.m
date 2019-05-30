@@ -13,6 +13,35 @@
 
 @implementation RCTAppleHealthKit (Methods_Body)
 
+- (void)body_getAverageWeight:(NSDictionary *)input
+                     callback:(RCTResponseSenderBlock)callback
+{
+       HKQuantityType *weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+    
+        HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit poundUnit]];
+    
+        NSPredicate *pred = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
+    
+    [self fetchAverageSampleOfType:weightType
+                         predicate:predicate
+                        completion:^(HKQuantity *avgQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
+                            if (!avgQuantity) {
+                                callback(@[RCTJSErrorFromNSError(error)]);
+                            }
+                            else {
+                                // Determine the weight in the required unit.
+                                double avgWeight = [avgQuantity doubleValueForUnit:unit];
+                                NSDictionary *response = @{
+                                                           @"value" : @(avgWeight),
+                                                           @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
+                                                           @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
+                                                           };
+                                
+                                callback(@[[NSNull null], response]);
+                            }
+                        }];
+}
+
 
 - (void)body_getLatestWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {

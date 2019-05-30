@@ -11,6 +11,7 @@
 
 @interface RCTAppleHealthKit (Methods_Body)
 
+- (void)body_getAverageWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)body_getLatestWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)body_getWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)body_saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;

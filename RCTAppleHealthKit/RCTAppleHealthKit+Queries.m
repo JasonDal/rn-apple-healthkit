@@ -15,6 +15,33 @@
 
 @implementation RCTAppleHealthKit (Queries)
 
+
+
+- (void)fetchAverageSampleOfType:(HKQuantityType *)quantityType
+                                  predicate:(NSPredicate *)predicate
+                                 completion:(void (^)(HKQuantity *, NSDate *, NSDate *, NSError *))completionHandler {
+    
+    HKStatisticsQuery *query = [[HKStatisticsQuery alloc] initWithQuantityType:quantityType
+                                quantitySamplePredicate:predicate
+                               options:HKStatisticsOptionDiscreteAverage
+                             completionHandler:^(HKStatisticsQuery *query, HKStatistics *result, NSError *error) {
+                                 
+                                 
+                                 HKQuantity *avg = [result averageQuantity];
+                                 NSDate *startDate = result.startDate;
+                                 NSDate *endDate = result.endDate;
+                                 if (completionHandler) {
+                                     completionHandler(avg, startDate, endDate, error);
+                                 }
+                               }];
+    
+    
+
+    [self.healthStore executeQuery:query];
+}
+
+
+
 - (void)fetchMostRecentQuantitySampleOfType:(HKQuantityType *)quantityType
                                   predicate:(NSPredicate *)predicate
                                  completion:(void (^)(HKQuantity *, NSDate *, NSDate *, NSError *))completion {
