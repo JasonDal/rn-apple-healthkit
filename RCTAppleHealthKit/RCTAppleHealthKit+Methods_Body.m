@@ -27,7 +27,7 @@
             return;
         }
     
-        NSPredicate *pred = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
+        NSPredicate *predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
     
     [self fetchAverageSampleOfType:weightType
                          predicate:predicate
