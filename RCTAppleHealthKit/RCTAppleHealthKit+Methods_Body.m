@@ -176,6 +176,42 @@
 }
 
 
+- (void)body_getAverageHeight:(NSDictionary *)input
+                     callback:(RCTResponseSenderBlock)callback
+{
+    HKQuantityType *type = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+    
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit inchUnit]];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    NSPredicate *predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
+    
+    [self fetchAverageSampleOfType:type
+                         predicate:predicate
+                        completion:^(HKQuantity *avgQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
+                            if (!avgQuantity) {
+                                callback(@[RCTJSErrorFromNSError(error)]);
+                            }
+                            else {
+                                // Determine the weight in the required unit.
+                                double avgHeight = [avgQuantity doubleValueForUnit:unit];
+                                NSDictionary *response = @{
+                                                           @"value" : @(avgHeight),
+                                                           @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
+                                                           @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
+                                                           };
+                                
+                                callback(@[[NSNull null], response]);
+                            }
+                        }];
+}
+
 - (void)body_getLatestHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     HKQuantityType *heightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];

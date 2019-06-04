@@ -74,6 +74,11 @@ RCT_EXPORT_METHOD(saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBl
     [self body_saveWeight:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getAverageHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getAverageHeight:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(getLatestHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_getLatestHeight:input callback:callback];
@@ -162,6 +167,11 @@ RCT_EXPORT_METHOD(getMonthlyStepCountSamples:(NSDictionary *)input callback:(RCT
 RCT_EXPORT_METHOD(getAllStepCountSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self fitness_getAllStepSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getTotalSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_getTotalSteps:input callback:callback];
 }
 
 RCT_EXPORT_METHOD(saveSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)

@@ -223,6 +223,40 @@
 }
 
 
+- (void)fitness_getTotalSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    
+    if(startDate == nil) {
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+    HKUnit *stepsUnit = [HKUnit countUnit];
+    
+    [self fetchSumOfSamplesBetweenDates:stepCountType
+                                   unit:stepsUnit
+                                    startDate:startDate
+                                endDate:endDate
+                             completion:^(double value, NSDate *startDate, NSDate *endDate, NSError *error) {
+                                 if (!value) {
+                                     callback(@[RCTJSErrorFromNSError(error)]);
+                                     return;
+                                 }
+                                 
+                                 NSDictionary *response = @{
+                                                            @"value" : @(value),
+                                                            @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
+                                                            @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
+                                                            };
+                                 
+                                 callback(@[[NSNull null], response]);
+                             }];
+}
+
+
 - (void)fitness_saveSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     double value = [RCTAppleHealthKit doubleFromOptions:input key:@"value" withDefault:(double)0];
