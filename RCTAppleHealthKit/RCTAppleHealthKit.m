@@ -69,6 +69,21 @@ RCT_EXPORT_METHOD(getAverageWeight:(NSDictionary *)input callback:(RCTResponseSe
     [self body_getAverageWeight:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getHourlyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getHourlyWeightSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getDailyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getDailyWeightSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getMonthlyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getMonthlyWeightSamples:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_saveWeight:input callback:callback];
@@ -89,6 +104,21 @@ RCT_EXPORT_METHOD(getHeightSamples:(NSDictionary *)input callback:(RCTResponseSe
     [self body_getHeightSamples:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getHourlyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getHourlyHeightSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getDailyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getDailyHeightSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getMonthlyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getMonthlyHeightSamples:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(saveHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_saveHeight:input callback:callback];
@@ -107,6 +137,21 @@ RCT_EXPORT_METHOD(getLatestBmi:(NSDictionary *)input callback:(RCTResponseSender
 RCT_EXPORT_METHOD(getBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_getBmiSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getHourlyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getHourlyBmiSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getDailyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getDailyBmiSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getMonthlyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getMonthlyBmiSamples:input callback:callback];
 }
 
 RCT_EXPORT_METHOD(saveBmi:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
