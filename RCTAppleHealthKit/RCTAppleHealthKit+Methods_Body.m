@@ -170,7 +170,7 @@
     }
     NSPredicate * predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
     
-    [self fetchQuantitySamplesOfType:heightType
+    [self fetchQuantitySamplesOfType:bmiType
                                 unit:unit
                            predicate:predicate
                            ascending:ascending
