@@ -660,7 +660,7 @@
                                       toDate:endDate
                                    withBlock:^(HKStatistics *result, BOOL *stop) {
                                        
-                                       HKQuantity *quantity = result.sumQuantity;
+                                       HKQuantity *quantity = result.averageQuantity;
                                        if (quantity) {
                                            NSDate *startDate = result.startDate;
                                            NSDate *endDate = result.endDate;
@@ -860,7 +860,7 @@
                                       toDate:endDate
                                    withBlock:^(HKStatistics *result, BOOL *stop) {
                                        
-                                       HKQuantity *quantity = result.sumQuantity;
+                                       HKQuantity *quantity = result.averageQuantity;
                                        if (quantity) {
                                            NSDate *startDate = result.startDate;
                                            NSDate *endDate = result.endDate;
@@ -1060,7 +1060,7 @@
                                       toDate:endDate
                                    withBlock:^(HKStatistics *result, BOOL *stop) {
                                        
-                                       HKQuantity *quantity = result.sumQuantity;
+                                       HKQuantity *quantity = result.averageQuantity;
                                        if (quantity) {
                                            NSDate *startDate = result.startDate;
                                            NSDate *endDate = result.endDate;
