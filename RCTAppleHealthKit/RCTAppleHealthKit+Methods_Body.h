@@ -17,6 +17,7 @@
 - (void)body_saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 
 - (void)body_getLatestBodyMassIndex:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)body_getBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)body_saveBodyMassIndex:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 
 - (void)body_getAverageHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;

@@ -99,6 +99,11 @@ RCT_EXPORT_METHOD(getLatestBmi:(NSDictionary *)input callback:(RCTResponseSender
     [self body_getLatestBodyMassIndex:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getBmiSamples:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(saveBmi:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_saveBodyMassIndex:input callback:callback];
