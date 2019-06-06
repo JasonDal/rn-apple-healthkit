@@ -14,11 +14,13 @@
 - (void)fitness_getStepCountOnDay:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_setObserver:(NSDictionary *)input;
+
 - (void)fitness_getStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getDailyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getMonthlyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getAllStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getTotalSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+
 - (void)fitness_saveSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_initializeStepEventObserver:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getDistanceWalkingRunningOnDay:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;

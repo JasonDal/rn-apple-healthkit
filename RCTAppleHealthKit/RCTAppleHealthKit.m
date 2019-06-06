@@ -94,6 +94,11 @@ RCT_EXPORT_METHOD(saveHeight:(NSDictionary *)input callback:(RCTResponseSenderBl
     [self body_saveHeight:input callback:callback];
 }
 
+RCT_EXPORT_METHOD(getAverageBmi:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self body_getAverageBmi:input callback:callback];
+}
+
 RCT_EXPORT_METHOD(getLatestBmi:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
     [self body_getLatestBodyMassIndex:input callback:callback];

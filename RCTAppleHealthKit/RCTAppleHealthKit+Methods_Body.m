@@ -108,6 +108,94 @@
     }];
 }
 
+- (void)body_getHourlyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit poundUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+    
+    [self fetchHourlyAverageStatisticsCollection:weightType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+                                          if (err != nil) {
+                                              callback(@[RCTJSErrorFromNSError(err)]);
+                                              return;
+                                          }
+                                          callback(@[[NSNull null], arr]);
+                                      }];
+}
+
+- (void)body_getDailyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit poundUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+    
+    [self fetchAverageStatisticsCollection:weightType
+                                      unit:unit
+                                 startDate:startDate
+                                   endDate:endDate
+                                 ascending:ascending
+                                     limit:limit
+                                completion:^(NSArray *arr, NSError *err){
+                                    if (err != nil) {
+                                        callback(@[RCTJSErrorFromNSError(err)]);
+                                        return;
+                                    }
+                                    callback(@[[NSNull null], arr]);
+                                }];
+}
+
+- (void)body_getMonthlyWeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit poundUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+    
+    [self fetchMonthlyAverageStatisticsCollection:weightType
+                                      unit:unit
+                                 startDate:startDate
+                                   endDate:endDate
+                                 ascending:ascending
+                                     limit:limit
+                                completion:^(NSArray *arr, NSError *err){
+                                    if (err != nil) {
+                                        callback(@[RCTJSErrorFromNSError(err)]);
+                                        return;
+                                    }
+                                    callback(@[[NSNull null], arr]);
+                                }];
+}
+
+
 
 - (void)body_saveWeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
@@ -185,6 +273,136 @@
                               }
                           }];
 }
+
+
+- (void)body_getAverageBmi:(NSDictionary *)input
+                     callback:(RCTResponseSenderBlock)callback
+{
+    HKQuantityType *bmiType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex];
+    
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    NSPredicate *predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
+    
+    [self fetchAverageSampleOfType:bmiType
+                         predicate:predicate
+                        completion:^(HKQuantity *avgQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
+                            if (!avgQuantity) {
+                                callback(@[RCTJSErrorFromNSError(error)]);
+                            }
+                            else {
+                                // Determine the weight in the required unit.
+                                double avgBmi = [avgQuantity doubleValueForUnit:unit];
+                                NSDictionary *response = @{
+                                                           @"value" : @(avgBmi),
+                                                           @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
+                                                           @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
+                                                           };
+                                
+                                callback(@[[NSNull null], response]);
+                            }
+                        }];
+}
+
+
+
+
+- (void)body_getHourlyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *bmiType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex];
+    
+    [self fetchHourlyAverageStatisticsCollection:bmiType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+                                          if (err != nil) {
+                                              callback(@[RCTJSErrorFromNSError(err)]);
+                                              return;
+                                          }
+                                          callback(@[[NSNull null], arr]);
+                                      }];
+}
+
+- (void)body_getDailyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *bmiType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex];
+    
+    [self fetchAverageStatisticsCollection:bmiType
+                                      unit:unit
+                                 startDate:startDate
+                                   endDate:endDate
+                                 ascending:ascending
+                                     limit:limit
+                                completion:^(NSArray *arr, NSError *err){
+                                    if (err != nil) {
+                                        callback(@[RCTJSErrorFromNSError(err)]);
+                                        return;
+                                    }
+                                    callback(@[[NSNull null], arr]);
+                                }];
+}
+
+- (void)body_getMonthlyBmiSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *bmiType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex];
+    
+    [self fetchMonthlyAverageStatisticsCollection:bmiType
+                                             unit:unit
+                                        startDate:startDate
+                                          endDate:endDate
+                                        ascending:ascending
+                                            limit:limit
+                                       completion:^(NSArray *arr, NSError *err){
+                                           if (err != nil) {
+                                               callback(@[RCTJSErrorFromNSError(err)]);
+                                               return;
+                                           }
+                                           callback(@[[NSNull null], arr]);
+                                       }];
+}
+
+
+
 
 
 - (void)body_saveBodyMassIndex:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
@@ -301,6 +519,98 @@
         }
     }];
 }
+
+
+
+
+- (void)body_getHourlyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit inchUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *heighType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+    
+    [self fetchHourlyAverageStatisticsCollection:heightType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+                                          if (err != nil) {
+                                              callback(@[RCTJSErrorFromNSError(err)]);
+                                              return;
+                                          }
+                                          callback(@[[NSNull null], arr]);
+                                      }];
+}
+
+- (void)body_getDailyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit inchUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+    
+    [self fetchAverageStatisticsCollection:heightType
+                                      unit:unit
+                                 startDate:startDate
+                                   endDate:endDate
+                                 ascending:ascending
+                                     limit:limit
+                                completion:^(NSArray *arr, NSError *err){
+                                    if (err != nil) {
+                                        callback(@[RCTJSErrorFromNSError(err)]);
+                                        return;
+                                    }
+                                    callback(@[[NSNull null], arr]);
+                                }];
+}
+
+- (void)body_getMonthlyHeightSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit inchUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+    
+    HKQuantityType *heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+    
+    [self fetchMonthlyAverageStatisticsCollection:heightType
+                                             unit:unit
+                                        startDate:startDate
+                                          endDate:endDate
+                                        ascending:ascending
+                                            limit:limit
+                                       completion:^(NSArray *arr, NSError *err){
+                                           if (err != nil) {
+                                               callback(@[RCTJSErrorFromNSError(err)]);
+                                               return;
+                                           }
+                                           callback(@[[NSNull null], arr]);
+                                       }];
+}
+
+
 
 
 - (void)body_saveHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
