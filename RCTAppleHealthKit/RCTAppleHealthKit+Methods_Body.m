@@ -535,7 +535,7 @@
         return;
     }
     
-    HKQuantityType *heighType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+    HKQuantityType *heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
     
     [self fetchHourlyAverageStatisticsCollection:heightType
                                             unit:unit
