@@ -304,25 +304,14 @@
                             };
     
     
-    HKWorkoutActivityType workoutType;
-    switch(type) {
-        case "run":
-        {
-            workoutType = HKWorkoutActivityTypeRunning;
-            break;
-        }
-        case "bike":
-        {
-            workoutType = HKWorkoutActivityTypeCycling;
-            break;
-        }
-        default:
-        {
-            workoutType = HKWorkoutActivityTypeOther;
-        }
-    }
+    NSDictionary *typeDict = @{
+                               @"run": HKWorkoutActivityTypeRunning,
+                               @"bike": HKWorkoutActivityTypeCycling
+                               };
     
-    HKWorkout *workout = [HKWorkout workoutWithActivityType:workoutType
+    HKWorkoutActivityType workoutType;
+    
+    HKWorkout *workout = [HKWorkout workoutWithActivityType:typeDict[type]
                                                   startDate:startDate
                                                     endDate:endDate
                                                    duration:0
