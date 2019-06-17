@@ -296,7 +296,7 @@
     HKQuantity *distance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"distance" withDefault:(double)0]];
     double mets = [RCTAppleHealthKit doubleFromOptions:input key:@"mets" withDefault:(double)1];
     HKQuantity *energy = [HKQuantity quantityWithUnit:[HKUnit kilocalorieUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"energy" withDefault:(double)0]];
-    NSString *type = [RCTAppleHealthKit doubleFromOptions:input key:@"type" withDefault:"run"];
+    NSString *type = [RCTAppleHealthKit stringFromOptions:input key:@"type" withDefault:@"run"];
     
     NSDictionary *metadata = @{
                                @"steps": @(steps),
@@ -305,9 +305,9 @@
     
     
     HKWorkoutActivityType workoutType;
-    if([type isEqualToString:[[NSString alloc] initWithString:@"run"]]) {
+    if([type isEqualToString:@"run"]) {
         workoutType = HKWorkoutActivityTypeRunning;
-    } else if ([type isEqualToString:[[NSString alloc] initWithString:@"bike"]]) {
+    } else if ([type isEqualToString:@"bike"]) {
         workoutType = HKWorkoutActivityTypeCycling;
     }
     
