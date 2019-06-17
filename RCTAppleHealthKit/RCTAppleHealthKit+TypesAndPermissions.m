@@ -51,7 +51,7 @@
         // Mindfulness
         @"MindfulSession" : [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierMindfulSession],
         //workouts
-        @"Workout" : [HKObjectType workoutType],
+        @"Workout" : [HKObjectType workoutType]
     };
     return readPerms;
 }
@@ -59,6 +59,8 @@
 
 - (NSDictionary *)writePermsDict {
     NSDictionary *writePerms = @{
+        // workouts
+        @"Workout" : [HKObjectType workoutType],
         // Body Measurements
         @"Height" : [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight],
         @"Weight" : [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass],
