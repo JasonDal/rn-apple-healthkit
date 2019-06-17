@@ -305,9 +305,9 @@
     
     
     HKWorkoutActivityType workoutType;
-    if(type == "run") {
+    if([type isEqualToString:[[NSString alloc] initWithString:@"run"]]) {
         workoutType = HKWorkoutActivityTypeRunning;
-    } else if (type == "bike") {
+    } else if ([type isEqualToString:[[NSString alloc] initWithString:@"bike"]]) {
         workoutType = HKWorkoutActivityTypeCycling;
     }
     
