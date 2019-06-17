@@ -304,14 +304,15 @@
                             };
     
     
-    NSDictionary *typeDict = @{
-                               @"run": HKWorkoutActivityTypeRunning,
-                               @"bike": HKWorkoutActivityTypeCycling
-                               };
-    
     HKWorkoutActivityType workoutType;
+    if(type == "run") {
+        workoutType = HKWorkoutActivityTypeRunning;
+    } else if (type == "bike") {
+        workoutType = HKWorkoutActivityTypeCycling;
+    }
     
-    HKWorkout *workout = [HKWorkout workoutWithActivityType:typeDict[type]
+    
+    HKWorkout *workout = [HKWorkout workoutWithActivityType:workoutType
                                                   startDate:startDate
                                                     endDate:endDate
                                                    duration:0
@@ -324,7 +325,7 @@
             callback(@[RCTJSErrorFromNSError(error)]);
             return;
         }
-        callback(@[[NSNull null], success]);
+        callback(@[[NSNull null], 1]);
     }];
 }
 
