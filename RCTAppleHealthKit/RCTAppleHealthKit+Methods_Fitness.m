@@ -304,11 +304,11 @@
                             };
     
     
-    HKWorkoutActivityType *workoutType;
+    HKWorkoutType workoutType;
     switch(type) {
         case "run":
         {
-            workoutType = HKWorkoutActivityTypeRunning;
+            workoutType = [HKWorkoutType  HKWorkoutActivityTypeRunning;
             break;
         }
         case "bike":
@@ -318,7 +318,7 @@
         }
         default:
         {
-            workoutType = HKWorkoutActivityTypeOther
+            workoutType = HKWorkoutActivityTypeOther;
         }
     }
     
@@ -335,7 +335,7 @@
             callback(@[RCTJSErrorFromNSError(error)]);
             return;
         }
-        callback(@[[NSNull null], @(value)]);
+        callback(@[[NSNull null], success]);
     }];
 }
 
