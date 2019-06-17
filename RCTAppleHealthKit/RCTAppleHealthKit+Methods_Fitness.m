@@ -304,11 +304,11 @@
                             };
     
     
-    HKWorkoutType workoutType;
+    HKWorkoutActivityType workoutType;
     switch(type) {
         case "run":
         {
-            workoutType = [HKWorkoutType  HKWorkoutActivityTypeRunning;
+            workoutType = HKWorkoutActivityTypeRunning;
             break;
         }
         case "bike":
