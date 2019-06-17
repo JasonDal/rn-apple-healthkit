@@ -325,7 +325,7 @@
             callback(@[RCTJSErrorFromNSError(error)]);
             return;
         }
-        callback(@[[NSNull null], 1]);
+        callback(@[[NSNull null], @(1)]);
     }];
 }
 
