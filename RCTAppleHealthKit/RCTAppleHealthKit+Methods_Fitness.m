@@ -318,7 +318,7 @@
                                                    duration:0
                                           totalEnergyBurned:energy
                                               totalDistance:distance
-                                                   metadata:metadata]
+                                                   metadata:metadata];
     
     [self.healthStore saveObject:workout withCompletion:^(BOOL success, NSError *error) {
         if (!success) {
