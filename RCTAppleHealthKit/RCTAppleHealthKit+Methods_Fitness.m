@@ -283,6 +283,55 @@
 }
 
 
+- (void)fitness_saveWorkout:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:nil];
+    if(startDate == nil || endDate == nil){
+        callback(@[RCTMakeError(@"startDate and endDate are required in options", nil, nil)]);
+        return;
+    }
+    
+    double *steps = [RCTAppleHealthKit doubleFromOptions:input key:@"steps" withDefault:(double)0];
+    HKQuantity *distance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"distance" withDefault:(double)0]];
+    double *mets = [RCTAppleHealthKit doubleFromOptions:input key:@"mets" withDefault:(double)1];
+    HKQuantity *energy = [HKQuantity quantityWithUnit:[HKUnit kilocalorieUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"energy" withDefault:(double)0]];
+    NSString *type = [RCTAppleHealthKit doubleFromOptions:input key:@"type" withDefault:"run"];
+    
+    NSDictionary *metadata = @{
+                               @"steps": @(steps),
+                               @"mets": @(mets)
+                            };
+    
+    
+    HKWorkoutActivityType *workoutType;
+    switch(type) {
+        case "run":
+            workoutType = HKWorkoutActivityTypeRunning;
+            break;
+        case "bike":
+            workoutType = HKWorkoutActivityTypeCycling;
+            break;
+    }
+    
+    HKWorkout *workout = [HKWorkout workoutWithActivityType:workoutType
+                                                  startDate:startDate
+                                                    endDate:endDate
+                                                   duration:0
+                                          totalEnergyBurned:energy
+                                              totalDistance:distance
+                                                   metadata:metadata]
+    
+    [self.healthStore saveObject:workout withCompletion:^(BOOL success, NSError *error) {
+        if (!success) {
+            callback(@[RCTJSErrorFromNSError(error)]);
+            return;
+        }
+        callback(@[[NSNull null], @(value)]);
+    }];
+}
+
+
 - (void)fitness_initializeStepEventObserver:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     HKSampleType *sampleType =

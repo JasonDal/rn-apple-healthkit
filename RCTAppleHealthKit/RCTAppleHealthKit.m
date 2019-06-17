@@ -279,6 +279,12 @@ RCT_EXPORT_METHOD(getTotalActiveMinutes:(NSDictionary *)input callback:(RCTRespo
 
 
 
+RCT_EXPORT_METHOD(saveWorkout:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_saveWorkout:input callback:callback];
+}
+
+
 
 RCT_EXPORT_METHOD(saveFood:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
