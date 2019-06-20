@@ -25,8 +25,12 @@
 - (void)fitness_saveWorkout:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 
 - (void)fitness_getDistanceWalkingRunningOnDay:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
-- (void)fitness_getDailyDistanceWalkingRunningSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
-- (void)fitness_getTotalDistanceWalkingRunning:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+
+- (void)fitness_getDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getDailyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getMonthlyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getAllDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getTotalDistanceRunningWalking:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 
 - (void)fitness_getDistanceCyclingOnDay:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getDailyDistanceCyclingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;

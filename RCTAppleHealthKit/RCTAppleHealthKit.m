@@ -242,14 +242,29 @@ RCT_EXPORT_METHOD(getDistanceWalkingRunning:(NSDictionary *)input callback:(RCTR
     [self fitness_getDistanceWalkingRunningOnDay:input callback:callback];
 }
 
-RCT_EXPORT_METHOD(getDailyDistanceWalkingRunningSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(getDistanceRunWalkSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
-    [self fitness_getDailyDistanceWalkingRunningSamples:input callback:callback];
+    [self fitness_getDistanceRunningWalkingSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getDailyDistanceRunWalkSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_getDailyDistanceRunningWalkingSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getMonthlyDistanceRunWalkSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_getMonthlyDistanceRunningWalkingSamples:input callback:callback];
+}
+
+RCT_EXPORT_METHOD(getAllDistanceRunWalkSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
+{
+    [self fitness_getAllDistanceRunningWalkingSamples:input callback:callback];
 }
 
 RCT_EXPORT_METHOD(getTotalDistanceRunWalk:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
 {
-    [self fitness_getTotalDistanceWalkingRunning:input callback:callback];
+    [self fitness_getTotalDistanceRunningWalking:input callback:callback];
 }
 
 RCT_EXPORT_METHOD(getDistanceCycling:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback)
