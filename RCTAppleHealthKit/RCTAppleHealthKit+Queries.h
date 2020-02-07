@@ -17,26 +17,6 @@
 - (void)fetchSumOfSamplesOnDayForType:(HKQuantityType *)quantityType unit:(HKUnit *)unit day:(NSDate *)day completion:(void (^)(double, NSDate *, NSDate *, NSError *))completionHandler;
 - (void)fetchSumOfSamplesBetweenDates:(HKQuantityType *)quantityType unit:(HKUnit *)unit startDate:(NSDate *)startDate endDate:(NSDate *)endDate completion:(void (^)(double, NSDate *, NSDate *, NSError *))completionHandler;
 
-// daily
-- (void)fetchCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
-                                          unit:(HKUnit *)unit
-                                     startDate:(NSDate *)startDate
-                                       endDate:(NSDate *)endDate
-                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
-- (void)fetchCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
-                                          unit:(HKUnit *)unit
-                                     startDate:(NSDate *)startDate
-                                       endDate:(NSDate *)endDate
-                                     ascending:(BOOL)asc
-                                         limit:(NSUInteger)lim
-                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
-- (void)fetchAverageStatisticsCollection:(HKQuantityType *)quantityType
-                                          unit:(HKUnit *)unit
-                                     startDate:(NSDate *)startDate
-                                       endDate:(NSDate *)endDate
-                                     ascending:(BOOL)asc
-                                         limit:(NSUInteger)lim
-                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
 
 // hourly
 - (void)fetchHourlyCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
@@ -58,6 +38,52 @@
                                            ascending:(BOOL)asc
                                                limit:(NSUInteger)lim
                                           completion:(void (^)(NSArray *, NSError *))completionHandler;
+
+// daily
+- (void)fetchCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                          unit:(HKUnit *)unit
+                                     startDate:(NSDate *)startDate
+                                       endDate:(NSDate *)endDate
+                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
+- (void)fetchCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                          unit:(HKUnit *)unit
+                                     startDate:(NSDate *)startDate
+                                       endDate:(NSDate *)endDate
+                                     ascending:(BOOL)asc
+                                         limit:(NSUInteger)lim
+                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
+- (void)fetchAverageStatisticsCollection:(HKQuantityType *)quantityType
+                                          unit:(HKUnit *)unit
+                                     startDate:(NSDate *)startDate
+                                       endDate:(NSDate *)endDate
+                                     ascending:(BOOL)asc
+                                         limit:(NSUInteger)lim
+                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
+
+
+
+// weekly
+- (void)fetchWeeklyCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                           unit:(HKUnit *)unit
+                                      startDate:(NSDate *)startDate
+                                        endDate:(NSDate *)endDate
+                                     completion:(void (^)(NSArray *, NSError *))completionHandler;
+- (void)fetchWeeklyCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                           unit:(HKUnit *)unit
+                                      startDate:(NSDate *)startDate
+                                        endDate:(NSDate *)endDate
+                                      ascending:(BOOL)asc
+                                          limit:(NSUInteger)lim
+                                     completion:(void (^)(NSArray *, NSError *))completionHandler;
+- (void)fetchWeeklyAverageStatisticsCollection:(HKQuantityType *)quantityType
+                                           unit:(HKUnit *)unit
+                                      startDate:(NSDate *)startDate
+                                        endDate:(NSDate *)endDate
+                                      ascending:(BOOL)asc
+                                          limit:(NSUInteger)lim
+                                     completion:(void (^)(NSArray *, NSError *))completionHandler;
+
+
 
 
 // monthly

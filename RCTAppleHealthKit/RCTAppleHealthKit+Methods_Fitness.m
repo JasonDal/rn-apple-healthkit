@@ -56,9 +56,9 @@
     NSString *type = [RCTAppleHealthKit stringFromOptions:input key:@"type" withDefault:@"Walking"];
     NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:[NSDate date]];
     NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
-    
+
     NSPredicate *predicate = [HKQuery predicateForSamplesWithStartDate:startDate endDate:endDate options:HKQueryOptionStrictStartDate];
-    
+
     HKSampleType *samplesType = [RCTAppleHealthKit hkQuantityTypeFromString:type];
     if ([type isEqual:@"Running"] || [type isEqual:@"Cycling"]) {
         unit = [HKUnit mileUnit];
@@ -85,12 +85,12 @@
 {
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
     NSString *type = [RCTAppleHealthKit stringFromOptions:input key:@"type" withDefault:@"Walking"];
-    
+
     HKSampleType *samplesType = [RCTAppleHealthKit hkQuantityTypeFromString:type];
     if ([type isEqual:@"Running"] || [type isEqual:@"Cycling"]) {
         unit = [HKUnit mileUnit];
     }
-    
+
     [self setObserverForType:samplesType unit:unit];
 }
 
@@ -127,27 +127,27 @@
 
 - (void)fitness_getAllStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-    
+
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
     NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
     BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
-    
+
     NSDateComponents *comps = [[NSDateComponents alloc] init];
     comps.year = 2013;
     comps.month = 1;
     comps.day = 1;
     NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
+
     NSDate *startDate = [cal dateFromComponents:comps];
     NSDate *endDate = [NSDate date];
-    
+
     if(startDate == nil){
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
-    
+
     [self fetchCumulativeSumStatisticsCollection:stepCountType
                                             unit:unit
                                        startDate:startDate
@@ -193,6 +193,37 @@
     }];
 }
 
+
+- (void)fitness_getWeeklyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+
+    HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+
+    [self fetchWeeklyCumulativeSumStatisticsCollection:stepCountType
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+        if (err != nil) {
+            callback(@[RCTJSErrorFromNSError(err)]);
+            return;
+        }
+        callback(@[[NSNull null], arr]);
+    }];
+}
+
+
 - (void)fitness_getMonthlyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:[HKUnit countUnit]];
@@ -204,9 +235,9 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
-    
+
     [self fetchMonthlyCumulativeSumStatisticsCollection:stepCountType
                                             unit:unit
                                        startDate:startDate
@@ -227,15 +258,15 @@
 {
     NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
     NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
-    
+
     if(startDate == nil) {
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
     HKUnit *stepsUnit = [HKUnit countUnit];
-    
+
     [self fetchSumOfSamplesBetweenDates:stepCountType
                                    unit:stepsUnit
                                     startDate:startDate
@@ -245,13 +276,13 @@
                                      callback(@[RCTJSErrorFromNSError(error)]);
                                      return;
                                  }
-                                 
+
                                  NSDictionary *response = @{
                                                             @"value" : @(value),
                                                             @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
                                                             @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
                                                             };
-                                 
+
                                  callback(@[[NSNull null], response]);
                              }];
 }
@@ -291,27 +322,27 @@
         callback(@[RCTMakeError(@"startDate and endDate are required in options", nil, nil)]);
         return;
     }
-    
+
     double steps = [RCTAppleHealthKit doubleFromOptions:input key:@"steps" withDefault:(double)0];
     HKQuantity *distance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"distance" withDefault:(double)0]];
     double mets = [RCTAppleHealthKit doubleFromOptions:input key:@"mets" withDefault:(double)1];
     HKQuantity *energy = [HKQuantity quantityWithUnit:[HKUnit kilocalorieUnit] doubleValue:[RCTAppleHealthKit doubleFromOptions:input key:@"energy" withDefault:(double)0]];
     NSString *type = [RCTAppleHealthKit stringFromOptions:input key:@"type" withDefault:@"run"];
-    
+
     NSDictionary *metadata = @{
                                @"steps": @(steps),
                                @"mets": @(mets)
                             };
-    
-    
+
+
     HKWorkoutActivityType workoutType;
     if([type isEqualToString:@"run"]) {
         workoutType = HKWorkoutActivityTypeRunning;
     } else if ([type isEqualToString:@"bike"]) {
         workoutType = HKWorkoutActivityTypeCycling;
     }
-    
-    
+
+
     HKWorkout *workout = [HKWorkout workoutWithActivityType:workoutType
                                                   startDate:startDate
                                                     endDate:endDate
@@ -319,7 +350,7 @@
                                           totalEnergyBurned:energy
                                               totalDistance:distance
                                                    metadata:metadata];
-    
+
     [self.healthStore saveObject:workout withCompletion:^(BOOL success, NSError *error) {
         if (!success) {
             callback(@[RCTJSErrorFromNSError(error)]);
@@ -405,9 +436,10 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
-    
+
+
     [self fetchHourlyCumulativeSumStatisticsCollection:type
                                                   unit:unit
                                              startDate:startDate
@@ -426,27 +458,27 @@
 
 - (void)fitness_getAllDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-    
+
     HKUnit *unit = [HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo];
     NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
     BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
-    
+
     NSDateComponents *comps = [[NSDateComponents alloc] init];
     comps.year = 2013;
     comps.month = 1;
     comps.day = 1;
     NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
+
     NSDate *startDate = [cal dateFromComponents:comps];
     NSDate *endDate = [NSDate date];
-    
+
     if(startDate == nil){
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
-    
+
     [self fetchCumulativeSumStatisticsCollection:type
                                             unit:unit
                                        startDate:startDate
@@ -474,9 +506,9 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
-    
+
     [self fetchCumulativeSumStatisticsCollection:type
                                             unit:unit
                                        startDate:startDate
@@ -492,6 +524,38 @@
                                       }];
 }
 
+
+- (void)fitness_getWeeklyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
+{
+    HKUnit *unit = [HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo];
+    NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+    BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+    NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+    NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    if(startDate == nil){
+        callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+        return;
+    }
+
+    HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
+
+    [self fetchWeeklyCumulativeSumStatisticsCollection:type
+                                            unit:unit
+                                       startDate:startDate
+                                         endDate:endDate
+                                       ascending:ascending
+                                           limit:limit
+                                      completion:^(NSArray *arr, NSError *err){
+                                          if (err != nil) {
+                                              callback(@[RCTJSErrorFromNSError(err)]);
+                                              return;
+                                          }
+                                          callback(@[[NSNull null], arr]);
+                                      }];
+}
+
+
+
 - (void)fitness_getMonthlyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     HKUnit *unit = [HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo];
@@ -503,9 +567,9 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
-    
+
     [self fetchMonthlyCumulativeSumStatisticsCollection:type
                                                    unit:unit
                                               startDate:startDate
@@ -529,15 +593,15 @@
 {
     NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
     NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
-    
+
     if(startDate == nil) {
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
     HKUnit *unit = [HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo];
-    
+
     [self fetchSumOfSamplesBetweenDates:type
                                    unit:unit
                               startDate:startDate
@@ -547,13 +611,13 @@
                                      callback(@[RCTJSErrorFromNSError(error)]);
                                      return;
                                  }
-                                 
+
                                  NSDictionary *response = @{
                                                             @"value" : @(value),
                                                             @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
                                                             @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
                                                             };
-                                 
+
                                  callback(@[[NSNull null], response]);
                              }];
 }
@@ -601,9 +665,9 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *quantityType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceCycling];
-    
+
     [self fetchCumulativeSumStatisticsCollection:quantityType
                                             unit:unit
                                        startDate:startDate
@@ -653,9 +717,9 @@
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *quantityType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierFlightsClimbed];
-    
+
     [self fetchCumulativeSumStatisticsCollection:quantityType
                                             unit:unit
                                        startDate:startDate
@@ -677,15 +741,15 @@
 {
     NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
     NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
-    
+
     if(startDate == nil) {
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
     }
-    
+
     HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierAppleExerciseTime];
     HKUnit *unit = [HKUnit minuteUnit];
-    
+
     [self fetchSumOfSamplesBetweenDates:type
                                    unit:unit
                               startDate:startDate
@@ -695,13 +759,13 @@
                                      callback(@[RCTJSErrorFromNSError(error)]);
                                      return;
                                  }
-                                 
+
                                  NSDictionary *response = @{
                                                             @"value" : @(value),
                                                             @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
                                                             @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
                                                             };
-                                 
+
                                  callback(@[[NSNull null], response]);
                              }];
 }

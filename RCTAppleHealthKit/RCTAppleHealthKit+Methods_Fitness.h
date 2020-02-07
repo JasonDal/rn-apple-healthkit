@@ -16,6 +16,7 @@
 - (void)fitness_setObserver:(NSDictionary *)input;
 - (void)fitness_getStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getDailyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getWeeklyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getMonthlyStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getAllStepSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getTotalSteps:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
@@ -28,6 +29,7 @@
 
 - (void)fitness_getDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getDailyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
+- (void)fitness_getWeeklyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getMonthlyDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getAllDistanceRunningWalkingSamples:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
 - (void)fitness_getTotalDistanceRunningWalking:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback;
