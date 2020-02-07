@@ -724,6 +724,7 @@
                                                      fromDate:[NSDate date]];
     NSInteger offset = (7 + anchorComponents.weekday - 1) % 7;
     anchorComponents.day -= offset;
+    anchorComponents.hour = 0;
     NSDate *anchorDate = [calendar dateFromComponents:anchorComponents];
 
     // Create the query
@@ -780,6 +781,7 @@
                                                      fromDate:[NSDate date]];
     NSInteger offset = (7 + anchorComponents.weekday - 1) % 7;
     anchorComponents.day -= offset;
+    anchorComponents.hour = 0;
     NSDate *anchorDate = [calendar dateFromComponents:anchorComponents];
 
     // Create the query
@@ -855,6 +857,7 @@
                                                      fromDate:[NSDate date]];
     NSInteger offset = (7 + anchorComponents.weekday - 1) % 7;
     anchorComponents.day -= offset;
+    anchorComponents.hour = 0;
     NSDate *anchorDate = [calendar dateFromComponents:anchorComponents];
 
     // Create the query
